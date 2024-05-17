@@ -21,3 +21,22 @@ jobs:
       - run: |
           source /opt/ros/iron/setup.bash
           colcon build
+
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add LLVM apt repository
+        run: |
+          curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key \
+            | sudo gpg --dearmor -o /etc/apt/keyrings/llvm.gpg
+          source /etc/os-release
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/llvm.gpg] http://apt.llvm.org/$UBUNTU_CODENAME llvm-toolchain-$UBUNTU_CODENAME main" \
+            | sudo tee /etc/apt/sources.list.d/llvm.list
+      - run: |
+          sudo apt-get update
+          sudo apt-get install clang-format-19
+      - run: |
+          shopt -s globstar
+          shopt -s nullglob
+          clang-format-19 --dry-run --verbose --Werror **/*.{c,cpp,h,hpp}
