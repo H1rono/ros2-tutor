@@ -18,7 +18,17 @@ add_executable(subscriber
   src/subscriber_main.cpp
 )
 
+add_executable(publisher
+  src/publisher.cpp
+  src/publisher_main.cpp
+)
+
 ament_target_dependencies(subscriber
+  rclcpp
+  std_msgs
+)
+
+ament_target_dependencies(publisher
   rclcpp
   std_msgs
 )
@@ -29,8 +39,14 @@ target_include_directories(subscriber
     $<INSTALL_INTERFACE:include>
 )
 
+target_include_directories(publisher
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
 install(TARGETS
-  subscriber
+  subscriber publisher
   DESTINATION lib/${PROJECT_NAME}
 )
 
