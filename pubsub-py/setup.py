@@ -17,7 +17,7 @@ setup(
     maintainer_email='hronok66@gmail.com',
     description='TODO: Package description',
     license='MIT',
-    tests_require=['pytest'],
+    tests_require=[],
     entry_points={
         'console_scripts': [
             'subscriber = pubsub_py.subscriber:main'
