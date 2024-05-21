@@ -2,14 +2,14 @@
 
 namespace param {
 
-class Parameters : public rclcpp::Node {
-private:
-    rclcpp::TimerBase::SharedPtr timer;
+    class Parameters : public rclcpp::Node {
+    private:
+        rclcpp::TimerBase::SharedPtr timer;
 
-    void timer_callback();
+        void timer_callback();
 
-public:
-    Parameters();
-};
+    public:
+        Parameters(const rclcpp::NodeOptions &options);
+    };
 
 }

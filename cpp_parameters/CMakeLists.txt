@@ -11,25 +11,36 @@ find_package(ament_cmake REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
 
-add_executable(param
+add_library(param
+    SHARED
     src/parameters.cpp
-    src/parameters_main.cpp
 )
 
 ament_target_dependencies(param
     rclcpp
+    rclcpp_components
 )
 
 target_include_directories(param
-    PUBLIC
+    PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
+rclcpp_components_register_node(
+    param
+    PLUGIN "param::Parameters"
+    EXECUTABLE parameters
+)
+
 install(
     TARGETS param
-    DESTINATION lib/${PROJECT_NAME}
+    EXPORT export_param_component
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
 )
 
 install(
