@@ -1,17 +1,21 @@
 from launch import LaunchDescription
-from launch_ros.actions import Node
+from launch_ros.actions import ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
 
 
 def generate_launch_description():
-    return LaunchDescription([
-        Node(
+    container = ComposableNodeContainer(
+        name="my_container",
+        namespace="",
+        package="rclcpp_components",
+        executable="component_container",
+        composable_node_descriptions=[ComposableNode(
             package="cpp_parameters",
-            executable="param",
-            name="custom_param_node",
-            output="screen",
-            emulate_tty=True,
+            plugin="param::Parameters",
+            name="param",
             parameters=[
-                {"my_parameter": "ROS2"}
+                {"my_parameter": "earth"}
             ]
-        )
-    ])
+        )]
+    )
+    return LaunchDescription([container])
