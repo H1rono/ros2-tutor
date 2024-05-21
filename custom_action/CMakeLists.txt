@@ -15,15 +15,21 @@ find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(tutorial_interfaces REQUIRED)
 
-#add_executable(action_server
-#    src/fibonacci_action_server_main.cpp
-#    src/fibonacci_action_server.cpp
-#)
 add_library(action_server SHARED
     src/fibonacci_action_server.cpp
 )
+add_library(action_client SHARED
+    src/fibonacci_action_client.cpp
+)
 
 ament_target_dependencies(action_server
+    rclcpp
+    rclcpp_action
+    rclcpp_components
+    tutorial_interfaces
+)
+
+ament_target_dependencies(action_client
     rclcpp
     rclcpp_action
     rclcpp_components
@@ -36,7 +42,17 @@ target_include_directories(action_server
     $<INSTALL_INTERFACE:include>
 )
 
+target_include_directories(action_client
+    PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
 target_compile_definitions(action_server
+    PRIVATE "CUSTOM_ACTION_CPP_BUILDING_DLL"
+)
+
+target_compile_definitions(action_client
     PRIVATE "CUSTOM_ACTION_CPP_BUILDING_DLL"
 )
 
@@ -45,8 +61,13 @@ rclcpp_components_register_node(action_server
     EXECUTABLE fibonacci_action_server
 )
 
+rclcpp_components_register_node(action_client
+    PLUGIN "fibonacci::ActionClient"
+    EXECUTABLE fibonacci_action_client
+)
+
 install(
-    TARGETS action_server
+    TARGETS action_server action_client
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
