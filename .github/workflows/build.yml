@@ -21,6 +21,8 @@ jobs:
           path: src/ros2-tutor
       - run: |
           . /opt/ros/iron/setup.bash
+          rosdep update
+          rosdep install -i --from-paths src --rosdistro iron -y
           colcon build
 
   clang-checks:
