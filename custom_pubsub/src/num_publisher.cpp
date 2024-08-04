@@ -1,10 +1,12 @@
 #include <chrono>
 #include <functional>
 
+#include "rclcpp_components/register_node_macro.hpp"
+
 #include "num_pubsub/num_publisher.hpp"
 
-num_pub::NumPublisher::NumPublisher() :
-    rclcpp::Node("num_publisher"),
+num_pub::NumPublisher::NumPublisher(const rclcpp::NodeOptions& options) :
+    rclcpp::Node("num_publisher", options),
     publisher(),
     timer(),
     count(0) {
@@ -21,3 +23,5 @@ void num_pub::NumPublisher::timer_callback() {
     RCLCPP_INFO_STREAM(this->get_logger(), "publishing: '" << message.num << "'");
     this->publisher->publish(message);
 }
+
+RCLCPP_COMPONENTS_REGISTER_NODE(num_pub::NumPublisher)

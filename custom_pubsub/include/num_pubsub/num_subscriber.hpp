@@ -12,7 +12,7 @@ private:
     void topic_callback(const tutorial_interfaces::msg::Num&);
 
 public:
-    NumSubscriber();
+    NumSubscriber(const rclcpp::NodeOptions& options = rclcpp::NodeOptions{});
 };
 
 }

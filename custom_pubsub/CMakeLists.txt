@@ -11,43 +11,61 @@ find_package(ament_cmake REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
 find_package(tutorial_interfaces REQUIRED)
 
-add_executable(num_sub
+add_library(numsub
+    SHARED
     src/num_subscriber.cpp
-    src/num_subscriber_main.cpp
 )
 
-add_executable(num_pub
+add_library(numpub
+    SHARED
     src/num_publisher.cpp
-    src/num_publisher_main.cpp
 )
 
-ament_target_dependencies(num_sub
+ament_target_dependencies(numsub
     rclcpp
+    rclcpp_components
     tutorial_interfaces
 )
 
-ament_target_dependencies(num_pub
+ament_target_dependencies(numpub
     rclcpp
+    rclcpp_components
     tutorial_interfaces
 )
 
-target_include_directories(num_sub
-    PUBLIC
+target_include_directories(numsub
+    PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
-target_include_directories(num_pub
-    PUBLIC
+target_include_directories(numpub
+    PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
+)
+
+rclcpp_components_register_node(
+    numsub
+    PLUGIN "num_sub::NumSubscriber"
+    EXECUTABLE num_sub
+)
+
+rclcpp_components_register_node(
+    numpub
+    PLUGIN "num_pub::NumPublisher"
+    EXECUTABLE num_pub
 )
 
 install(
-    TARGETS num_sub num_pub
-    DESTINATION lib/${PROJECT_NAME}
+    TARGETS numsub numpub
+    EXPORT export_num_pubsub
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
 )
 
 ament_package()

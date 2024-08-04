@@ -13,7 +13,7 @@ private:
     void                                                        timer_callback();
 
 public:
-    NumPublisher();
+    NumPublisher(const rclcpp::NodeOptions& options = rclcpp::NodeOptions{});
 };
 
-}
+} // namespace num_pub
